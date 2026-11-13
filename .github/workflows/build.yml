@@ -1,0 +1,35 @@
+
+name: Build Buku Kas Pembangunan
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'BukuKasPembangunan_CloudBuild_HP.zip'
+      - '.github/workflows/build.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Ambil source
+        uses: actions/checkout@v4
+
+      - name: Siapkan Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Ekstrak dan build APK
+        run: |
+          unzip -o BukuKasPembangunan_CloudBuild_HP.zip -d source
+          cd source
+          gradle assembleDebug
+
+      - name: Simpan APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Buku-Kas-Pembangunan-APK
+          path: source/app/build/outputs/apk/debug/app-debug.apk
