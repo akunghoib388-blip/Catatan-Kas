@@ -22,9 +22,15 @@ jobs:
           distribution: temurin
           java-version: '17'
 
+      - name: Siapkan Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
       - name: Ekstrak dan build APK
         run: |
           unzip -o BukuKasPembangunan_CloudBuild_HP.zip -d source
+          sed -i 's/JavaVersion.VERSION_1_8/JavaVersion.VERSION_17/g' source/app/build.gradle.kts
           cd source
           gradle assembleDebug
 
