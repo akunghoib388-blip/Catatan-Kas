@@ -27,10 +27,23 @@ jobs:
         with:
           gradle-version: '8.9'
 
-      - name: Ekstrak dan build APK
+      - name: Ekstrak source
+        run: unzip -o BukuKasPembangunan_CloudBuild_HP.zip -d source
+
+      - name: Samakan target Java ke 17
         run: |
-          unzip -o BukuKasPembangunan_CloudBuild_HP.zip -d source
-          sed -i 's/JavaVersion.VERSION_1_8/JavaVersion.VERSION_17/g' source/app/build.gradle.kts
+          cat >> source/app/build.gradle.kts <<'EOF'
+
+          android {
+              compileOptions {
+                  sourceCompatibility = JavaVersion.VERSION_17
+                  targetCompatibility = JavaVersion.VERSION_17
+              }
+          }
+          EOF
+
+      - name: Build APK
+        run: |
           cd source
           gradle assembleDebug
 
